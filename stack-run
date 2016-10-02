@@ -1,0 +1,7 @@
+#/usr/bin/env bash
+
+A=( "$@" )
+CMD=${A[0]}
+ARGS=${A[@]:1}
+
+$(stack exec which $CMD) ${ARGS[@]}

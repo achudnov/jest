@@ -1,0 +1,281 @@
+Name:                jest
+Version:             1.2
+Synopsis:            Research prototype of an information flow monitor inliner for JavaScript
+License:             GPL-3
+License-file:        LICENSE
+Author:              Andrey Chudnov
+Maintainer:          oss@chudnov.com
+Copyright:           (c) 2011-2015 Stevens Institute of Technology, (c) 2016 Andrey Chudnov
+Category:            Security
+Build-type:          Simple
+Stability:           experimental
+Extra-source-files:  test-data/cfg/*.js, test-data/syntactic/cases/*.js, test-data/syntactic/expects/*.js, rts/*.js
+Cabal-version:       >=1.14
+
+Library
+  Build-depends: base >= 4.2.0.0 && <5
+               , mtl >= 1.1.0.2 && < 3
+               , language-ecmascript >= 5 && < 6
+               , language-ecmascript-analysis >= 5 && < 6
+               , uniplate >= 1.6
+               , containers >= 0.4 && < 0.6
+               , parsec < 3.2.0
+               , fgl >= 5.4.2.2
+               , fgl-visualize == 0.1.*
+               , dotgen >= 0.4
+               , wl-pprint >= 1.1 && < 2.0
+               , pretty
+               , hxt >= 9.2.2
+               , arrows >= 0.4.4.0
+               , bytestring >= 0.9.1.10
+               , network == 2.6.*
+               , network-uri == 2.6.*
+               , data-default-class >= 0.0.1
+               , data-default-instances-base >= 0.0.1
+               , transformers >= 0.2.2
+               , random >= 1.0.0.3
+               , regex-tdfa >= 1.1.8
+               , template-haskell >= 2.7.0.0
+               , jespresso >= 1.1
+               , process == 1.*
+               , reverse-apply
+               , th-lift
+               , lens-simple == 0.1.*
+               , annotated-wl-pprint >= 0.7 && < 1.0
+
+  exposed-modules: Inliner
+                   Inliner.EvalParams
+                   Inliner.Monad
+                   RTS
+                   RTS.Policy
+                   AdHocTests
+                   Inliner.Instrumentation
+                   Inliner.Analysis
+                   SyntaxHelpers
+                   SyntaxHelpers.JSFunc
+                   CFG.Dot
+                   CFG.Construct
+                   CFG.Common
+                   CFG.ControlFlow
+                   CFG.Flatten
+                   RTS.Monitor.Core
+                   RTS.Level
+                   RTS.Policy.Syntax
+                   Inliner.Desugaring
+                   Inliner.CodeGen
+                   RTS.Monitor.APISpec
+  other-modules:   CFG
+                   Inliner.Annotations
+                   Inliner.Error
+                   Inliner.Rewriting
+                   MyPrelude
+                   Optimizations
+                   RTS.APIProxy.Android
+                   RTS.APIProxy.DOM
+                   RTS.APIProxy.ESSL
+                   RTS.APIProxy.Loader
+                   RTS.Policy.Parse
+                   RTS.Policy.Compile
+                   RTS.Parameters
+                   RTS.Names
+                   RTS.Level.StringSet
+                   RTS.Level.BitVector
+                   SyntaxHelpers.ASTTransformations
+                   SyntaxHelpers.FuncExprRW
+                   SyntaxHelpers.JSLink
+                   TransformationConsole
+  hs-source-dirs: src
+  Default-Extensions: ScopedTypeVariables
+  Default-Language: Haskell2010
+  ghc-options: 
+    -fwarn-incomplete-patterns
+
+-- command-line tool
+Executable jest
+  Main-is: Main.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+               , mtl >= 1.1.0.2 && < 3
+               , language-ecmascript
+               , containers >= 0.4 && < 0.6
+               , parsec > 3 && < 3.2.0
+               , cmdargs >= 0.9 && < 1.0
+               , haxy == 1.*
+               , http-server
+               , HTTP  >= 4000.2.0 && < 5000
+               , http-encodings >= 0.9.3 && < 1.0
+               , bytestring >= 0.9.1.10 && < 0.11
+               , network
+               , network-uri
+               , data-default-class >= 0.0.1 && < 0.1
+               , transformers >= 0.2.2
+               , mime == 0.4.*
+               , text >= 0.9 && < 2
+  Default-Extensions: ScopedTypeVariables
+  Default-Language: Haskell2010
+  ghc-options: 
+    -fwarn-incomplete-patterns
+    -rtsopts
+
+-- The test suite
+Test-Suite jest-test
+  type:	exitcode-stdio-1.0
+  main-is:       Test.hs
+  other-modules: Test.CFG
+                 Test.CFG.Builder
+                 Test.CFG.ConstructFlatten
+                 Test.CFG.Construct
+                 Test.CFG.ControlFlow
+                 Test.CFG.Query
+                 Test.Common
+                 Test.Desugaring
+                 Test.Desugaring.Syntactic
+                 Test.Desugaring.Transparency
+                 Test.Executable
+                 Test.JSQuickCheck
+                 Test.JSQuickCheck.QCJS
+                 Test.Rewriting
+                 Test.RTS
+                 Test.RTS.Common
+                 Test.RTS.Core
+                 Test.RTS.Level
+                 Test.Security
+                 Test.Security.Unit
+                 Test.Tong
+                 Test.Transparency
+                 Test.Transparency.Common
+                 Test.Transparency.Unit
+                 Test.Transparency.Randomized
+                 Test.Transparency.Generator
+                 Test.TaRTuFfe
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+               , tasty == 0.11.*
+               , tasty-quickcheck == 0.8.*
+               , tasty-golden == 2.3.*
+               , QuickCheck == 2.*
+               , directory >= 1.2.5
+               , filepath
+               , language-ecmascript
+               , data-default-class >= 0.0.1
+               , data-default-instances-base >= 0.0.1
+               , process >= 1.1.0.2
+               , containers >= 0.4 && < 0.6
+               , temporary
+               , template-haskell >= 2.7.0.0
+               , fgl >= 5.4.2.2
+               , transformers >= 0.2.2
+               , Diff >= 0.3.0
+               , uniplate >= 1.6
+               , tagged
+               , optparse-applicative
+               , easy-file == 0.2.*
+               , random >= 1.0.0.3
+               , mtl
+               , lens-simple
+  hs-source-dirs: test
+  Default-Language: Haskell2010
+  ghc-options:
+    -fwarn-incomplete-patterns
+
+-- A tool that generates the diagrams of the intra-procedural
+-- control-flow graphs of JavaScript programs. Used for debugging and
+-- testing. Requires the Graphviz "dot" program to be in the path.
+Executable graphgen
+  Main-is: GraphGen.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+               , mtl >= 1.1.0.2 && < 3
+               , language-ecmascript
+               , containers >= 0.4 && < 0.6
+               , transformers >= 0.2.2
+               , process >= 1.1.0.2
+               , easy-file == 0.2.*
+               , lens-simple
+               , pretty-tree == 0.1.*
+               , fgl
+               , fgl-visualize
+  Default-Extensions: ScopedTypeVariables
+  Default-Language: Haskell2010
+  hs-source-dirs: test
+  ghc-options: 
+    -fwarn-incomplete-patterns
+    -rtsopts
+
+-- A tool that generates a small (the size is an optional parameter)
+-- random JavaScript program and outputs it on the stdout
+Executable randjs
+  Main-is: RandJS.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , language-ecmascript
+               , QuickCheck == 2.*
+               , cmdargs >= 0.9 && < 1.0
+  Default-Extensions: ScopedTypeVariables
+  Default-Language: Haskell2010
+  hs-source-dirs: test
+  ghc-options: 
+    -fwarn-incomplete-patterns
+    -rtsopts
+
+-- A tool the prints analysis and transformation annotations for a
+-- given JavaScript program
+Executable printannot
+  Main-is: PrintAnnot.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+               , mtl >= 1.1.0.2 && < 3
+               , language-ecmascript
+               , containers >= 0.4 && < 0.6
+               , transformers >= 0.2.2
+               , process >= 1.1.0.2
+               , data-default-class
+  Default-Extensions: ScopedTypeVariables
+  Default-Language: Haskell2010
+  hs-source-dirs: test
+  ghc-options: 
+    -fwarn-incomplete-patterns
+    -rtsopts
+
+-- | Syntax check for a policy description
+Executable pcheck
+  Main-is: PCheck.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+  Default-Language: Haskell2010
+  hs-source-dirs: test
+  ghc-options: 
+    -fwarn-incomplete-patterns
+
+-- | A tool that prints RTS source (or parts of thereof) for standalone debugging
+Executable rtsdebug
+  Main-is: RTSDebug.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+               , language-ecmascript
+               , cmdargs >= 0.9 && < 1.0
+               , data-default-class
+               , data-default-instances-base
+  Default-Language: Haskell2010
+  hs-source-dirs: test
+  ghc-options: 
+    -fwarn-incomplete-patterns
+
+-- | Monitor performance benchmarker
+executable bench
+  --type:    exitcode-stdio-1.0
+  Main-is: Bench.hs
+  Build-depends: base >= 4.2.0.0 && < 5
+               , jest
+               , language-ecmascript
+               , data-default-class
+               , data-default-instances-base
+               , hjson
+               , hjson-query
+               , temporary
+               , process
+               , containers
+               , mtl
+  Default-Language: Haskell2010
+  hs-source-dirs: bench
+  ghc-options: 
+    -fwarn-incomplete-patterns

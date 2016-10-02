@@ -1,0 +1,16 @@
+[ignore]
+[include]
+core.js
+proxy.js
+essl.js
+dom.js
+level/stringset.js
+level/bitvector.js
+[libs]
+core.js
+essl.js
+proxy.js
+dom.js
+level/stringset.js
+level/bitvector.js
+[options]

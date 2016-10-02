@@ -1,0 +1,5 @@
+List of CFG construction test cases with problems
+
+gohfievo.js -- suspicious loop: break; <-> do l: break; while("l")
+chiweiga.js -- incorrect graph for for-var-loop; looping to the init, not the test.
+sohyaewa.js -- overzealous exception analysis for []["^N"]
