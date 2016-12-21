@@ -300,7 +300,7 @@ var ArrayProtoFields =
      //4, 5.
      var sep = separator ? ToStringBox(separator) : primlow(",");
      //6.
-     if (len === 0) return primbox("", this.l);
+     if (len.v === 0) return primbox("", this.l);
      //7-10
      var R = "", k = 0, level = len.l.join(this.l);
      while (k < len.v) {
