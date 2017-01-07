@@ -226,13 +226,14 @@ function assignField/*::<T>*/ (lhsobj/*: Box<any>*/, lhsfield/*: Box<any>*/, rhs
     nsuxCheck(lhsobj2,fieldname);
     var lhs2/*:Box<any> | Ref*/ = lhsobj2.v[fieldname.v] = initVar();
   } else lhs2 = lhs;
+  var rhs2 = join2(rhs, pclabel);
   if (/*::lhs2 instanceof Ref && */ IsRef(lhs2)) {
     //TODO: need to push the label on the setter and the object onto PCLS
-    lhs2.s.call(lhsobj2, rhs);
+    lhs2.s.call(lhsobj2, rhs2);
   } else {
     /*:: if (lhs2 instanceof Box) {*/
     nsuCheck(lhs2);
-    copybox(rhs,lhs2);
+    copybox(rhs2, lhs2);
     /*::}*/
   }
   MaintainArrayLength(lhsobj2, fieldname.v);
@@ -259,19 +260,21 @@ function assignFieldOp (op/*: (l: Box, r: Box) => Box*/, lhsobj/*: Box*/, lhsfie
   var lhsobj2 = ToObjectBox(lhsobj);
   var fieldname = ToStringBox(lhsfield);
   var lhs/*: Box | Ref | void*/ = lhsobj2.v[fieldname];
-  var rhs2/*:Box<any>*/;
+   var rhs2/*:Box<any>*/, rhs3/*Box<any>*/;
   if (typeof lhs === "undefined") {
     nsuxCheck(lhsobj2,fieldname);
     lhs = lhsobj2.v[fieldname.v] = initVar();
   }
   if (/*:: lhs instanceof Ref && lhs.s && lhs.g && */ IsRef(lhs)) {
     rhs2 = op.call(this, lhs.g.call(lhsobj2), rhs);
-    lhs.s.call(lhsobj2,rhs2);
+    rhs3 = join2(rhs2, pclabel);
+    lhs.s.call(lhsobj2,rhs3);
   } else {
     /*:: if (lhs instanceof Box) {*/
     nsuCheck(lhs);
-    rhs2 = op.call(this,lhs,rhs);
-    copybox(rhs2,lhs);
+    rhs2 = join2(op.call(this,lhs,rhs), pclabel);
+    rhs3 = join2(rhs2, pclabel);
+    copybox(rhs3,lhs);
     /*::} else rhs2 = primlow(void 0);*/
   }
   MaintainArrayLength(lhsobj2, fieldname.v);
@@ -281,7 +284,7 @@ function assignFieldOp (op/*: (l: Box, r: Box) => Box*/, lhsobj/*: Box*/, lhsfie
 function assignVar (lhs/*: Box*/, rhs/*: Box*/)/*: Box*/ {
   'use strict';
   nsuCheck(lhs);
-  copybox(rhs,lhs);
+  copybox(join2(rhs, pclabel), lhs);
   return rhs;
 }
 
@@ -289,7 +292,7 @@ function assignVarOp (op/*: (l: Box, r: Box) => Box*/, lhs/*: Box*/, rhs/*: Box*
   'use strict';
   nsuCheck(lhs);
   var rhs2 = op.call(this,lhs,rhs);
-  copybox(rhs2,lhs);
+  copybox(join2(rhs2, pclabel), lhs);
   return rhs2;
 }
  
