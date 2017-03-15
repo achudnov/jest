@@ -317,7 +317,7 @@ exprControlFlow e =
   let ta = e^.annot.transformAnn
       pushT = case ta^.push of
         NoPush -> return
-        PushGuard i -> pushM $ int i
+        PushGuard i -> flip pushM $ int i
         PushException -> pushExceptionM
       afterPopT = maybe return (flip popM . int) $ ta^.afterPop
       beforePopT = maybe return
