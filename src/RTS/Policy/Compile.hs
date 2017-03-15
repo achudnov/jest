@@ -140,9 +140,9 @@ compilePrincipals cmap li | (li == StringSet) ||
                            ]
      -- (ChannelName, Bool) -> Level
   in lambda [chanVar, writeVar] $ [vardecls [varinit lid newLevel]] ++
-     map (\(ch, rw) -> ifte (channelMatcher chanVar ch `land` rwTest writeVar rw)empty $
-                       block [expr $ var lid `dot` "level" `assign` levValue (ch, rw)
-                             ,returns $ var lid]
+     map (\(ch, rw) -> ifte (channelMatcher chanVar ch `land` rwTest writeVar rw) 
+                       (block [expr $ var lid `dot` "level" `assign` levValue (ch, rw)
+                              ,returns $ var lid]) empty
          )
      (Map.keys cmap) ++ defaultChannelCase
 
