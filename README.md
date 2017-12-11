@@ -1,7 +1,7 @@
 JEST
 ========
 
-An Information Flow Monitor Inliner for JavaScript Web Applications. Read [Andrey Chudnov's PhD dissertation](https://chudnov.com/dissertation.pdf) for an overview and rationale for the design and implementation.
+An Information Flow Monitor Inliner for JavaScript Web Applications. Read [Andrey Chudnov's PhD dissertation](https://www.cs.stevens.edu/~naumann/pub/ChudnovDissertation.pdf) for an overview and rationale for the design and implementation.
 
 Build instructions
 ------------------
